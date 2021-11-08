@@ -29,7 +29,7 @@ jobs:
 
       - name: Install Service Mesh and Deploy Application
         run: |
-          ./scripts/istio_deploy.sh
+          .github/workflows/scripts/istio_deploy.sh
         
       - name: Run Benchmark Tests
         uses: navendu-pottekkat/meshery-smp-action@schedule-action/navendu-pottekkat
@@ -52,7 +52,7 @@ jobs:
 
       - name: Install Service Mesh and Deploy Application
         run: |
-          ./scripts/istio_deploy.sh
+          .github/workflows/scripts/istio_deploy.sh
         
       - name: Run Benchmark Tests
         uses: navendu-pottekkat/meshery-smp-action@schedule-action/navendu-pottekkat
