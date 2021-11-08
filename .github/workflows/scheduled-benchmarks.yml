@@ -52,6 +52,7 @@ jobs:
 
       - name: Install Service Mesh and Deploy Application
         run: |
+          pwd
           .github/workflows/scripts/istio_deploy.sh
         
       - name: Run Benchmark Tests
