@@ -45,6 +45,7 @@ jobs:
           platform: docker
           profile_name: ${{ github.event.inputs.profile_name }}
           profile_filename: ${{ github.event.inputs.profile_filename }}
+          endpoint_url: ${{env.ENDPOINT_URL}}
 
   scheduled-test:
     name: Scheduled Benchmark Test
