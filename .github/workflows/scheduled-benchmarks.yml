@@ -23,7 +23,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     strategy:
       matrix:
-        service-mesh: ['istio', 'linkerd', 'osm']
+        service-mesh: ['istio', 'linkerd']
     steps:
       - name: Setup Kubernetes
         uses: manusa/actions-setup-minikube@v2.4.1
@@ -57,7 +57,7 @@ jobs:
     if: ${{ github.event_name == 'schedule' }}
     strategy:
       matrix:
-        service-mesh: ['istio', 'linkerd', 'osm']
+        service-mesh: ['istio', 'linkerd']
     steps:
       - name: Setup Kubernetes
         uses: manusa/actions-setup-minikube@v2.4.1
