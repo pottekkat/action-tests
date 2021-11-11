@@ -22,8 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' }}
     strategy:
+      fail-fast: false
       matrix:
         service-mesh: ['istio', 'linkerd']
+        load-generator: ['fortio', 'wrk2']
     steps:
       - name: Setup Kubernetes
         uses: manusa/actions-setup-minikube@v2.4.1
@@ -50,12 +52,15 @@ jobs:
           profile_filename: ${{ github.event.inputs.profile_filename }}
           endpoint_url: ${{env.ENDPOINT_URL}}
           service_mesh: ${{env.SERVICE_MESH}}
+          load_generator: ${{ matrix.load-generator }}
+          test_name: '${{ matrix.service-mesh }}-${{ matrix.load-generator }}-${{ github.event.inputs.profile_filename }}${{ github.event.inputs.profile_name }}'
 
   scheduled-test:
     name: Scheduled Benchmark Test
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'schedule' }}
     strategy:
+      fail-fast: false
       matrix:
         service-mesh: ['istio', 'linkerd']
     steps:
