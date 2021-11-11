@@ -21,6 +21,9 @@ jobs:
     name: Manual Benchmark Test
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' }}
+    strategy:
+      matrix:
+        service-mesh: ['istio', 'linkerd', 'osm']
     steps:
       - name: Setup Kubernetes
         uses: manusa/actions-setup-minikube@v2.4.1
@@ -34,8 +37,8 @@ jobs:
 
       - name: Install Service Mesh and Deploy Application
         run: |
-          chmod +x .github/workflows/scripts/istio_deploy.sh
-          .github/workflows/scripts/istio_deploy.sh
+          chmod +x .github/workflows/scripts/${{ matrix.service-mesh }}_deploy.sh
+          .github/workflows/scripts/${{ matrix.service-mesh }}_deploy.sh
         shell: bash
         
       - name: Run Benchmark Tests
@@ -52,6 +55,9 @@ jobs:
     name: Scheduled Benchmark Test
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'schedule' }}
+    strategy:
+      matrix:
+        service-mesh: ['istio', 'linkerd', 'osm']
     steps:
       - name: Setup Kubernetes
         uses: manusa/actions-setup-minikube@v2.4.1
@@ -65,8 +71,8 @@ jobs:
 
       - name: Install Service Mesh and Deploy Application
         run: |
-          chmod +x .github/workflows/scripts/istio_deploy.sh
-          .github/workflows/scripts/istio_deploy.sh
+          chmod +x .github/workflows/scripts/${{ matrix.service-mesh }}_deploy.sh
+          .github/workflows/scripts/${{ matrix.service-mesh }}_deploy.sh
         shell: bash
         
       - name: Run Benchmark Tests
