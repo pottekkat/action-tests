@@ -1,0 +1,74 @@
+name: Build and Publish Assets
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to be released'
+        required: true
+        default: 'stable'
+      nighthawk_version:
+        description: 'Version of the nighthawk project'
+        required: true
+        default: 'latest'
+
+jobs:
+  release:
+    name: create release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: ncipollo/release-action@v1
+      if: startsWith(github.ref, 'refs/tags/') && success()
+      with:
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        tag:  ${{ github.event.inputs.version }}
+        name: GetNighthawk ${{ github.event.inputs.version }}
+        allowUpdates: true
+        omitNameDuringUpdate: true
+        replacesArtifacts: true
+  build-and-publish:
+    name: build and publish packages
+    needs: [release]
+    strategy:
+      max-parallel: 10
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        architecture: [amd64]
+        distribution: [client, server, test_server, nighthawk_output_transform]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout nighthawk
+      uses: actions/checkout@v2
+      with:
+        repository: 'envoyproxy/nighthawk'
+        ref: ${{ github.event.inputs.nighthawk_version }}
+    - name: Setup Golang
+      uses: actions/setup-go@v2
+      with:
+        go-version: '^1.13.1'
+    - name: Build and release artifacts to Release
+      uses: layer5io/getnighthawk@master
+      with:
+        repo: layer5io/getnighthawk
+        version: ${{ github.event.inputs.version }}
+        token: ${{ secrets.GH_ACCESS_TOKEN }}
+        os: ${{ matrix.os }}
+        architecture: ${{ matrix.architecture }}
+        distribution: ${{ matrix.distribution }}
+    - name: Docker login
+      if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master') && success()
+      uses: azure/docker-login@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Docker build & tag
+      run: |
+        cd /home/runner/work/getnighthawk/getnighthawk/ci/docker
+        ./docker_build.sh
+        docker tag envoyproxy/nighthawk-dev:latest ${{ secrets.IMAGE_NAME }}:latest
+        docker tag ${{ secrets.IMAGE_NAME }}:latest ${{ secrets.IMAGE_NAME }}:${{ github.event.inputs.version }}
+    - name: Docker push
+      run: |
+        docker push ${{ secrets.IMAGE_NAME }}:latest
+        docker push ${{ secrets.IMAGE_NAME }}:${{ github.event.inputs.version }}
