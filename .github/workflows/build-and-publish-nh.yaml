@@ -42,7 +42,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: 'envoyproxy/nighthawk'
-        ref: ${{ github.event.inputs.nighthawk_version }}
         token: ${{ secrets.GH_ACCESS_TOKEN }}
     - name: Setup Golang
       uses: actions/setup-go@v2
