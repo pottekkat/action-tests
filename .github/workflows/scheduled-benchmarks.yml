@@ -48,7 +48,7 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
         
       - name: Run Benchmark Tests
-        uses: navendu-pottekkat/meshery-smp-action@bug/change-to-test-file/navendu-pottekkat
+        uses: navendu-pottekkat/meshery-smp-action@test-action-1
         with:
           provider_token: ${{ secrets.MESHERY_TOKEN }}
           platform: docker
@@ -91,7 +91,7 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
         
       - name: Run Benchmark Tests
-        uses: navendu-pottekkat/meshery-smp-action@bug/change-to-test-file/navendu-pottekkat
+        uses: navendu-pottekkat/meshery-smp-action@test-action-1
         with:
           provider_token: ${{ secrets.MESHERY_TOKEN }}
           platform: docker
