@@ -8,10 +8,10 @@ on:
     inputs:
       profile_name:
         description: "performance profile to use"
-        required: false
+        required: true
       profile_filename:
         description: "test configuration file"
-        required: false
+        required: true
   # scheduled to run at everyday at 13:22
   schedule:
     - cron: '22 13 * * *'
