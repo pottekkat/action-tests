@@ -3,19 +3,16 @@
 
 name: Scheduled Benchmark Tests
 on:
-  # for triggering manually, provide a token, a test configuration file name or a performance profile name
+  # for triggering manually, provide a test configuration file name or a performance profile name
   workflow_dispatch:
     inputs:
-      provider_token:
-        description: "token for remote provider"
-        required: false
       profile_name:
         description: "performance profile to use"
         required: false
       profile_filename:
         description: "test configuration file"
         required: false
-  # scheduled to run at every Thursday at 13:22
+  # scheduled to run at everyday at 13:22
   schedule:
     - cron: '22 13 * * *'
 
@@ -27,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service-mesh: ['istio', 'linkerd', 'osm']
+        service-mesh: ['istio', 'linkerd']
         load-generator: ['fortio', 'wrk2']
     steps:
       - name: Setup Kubernetes
@@ -45,18 +42,22 @@ jobs:
           chmod +x .github/workflows/scripts/${{ matrix.service-mesh }}_deploy.sh
           .github/workflows/scripts/${{ matrix.service-mesh }}_deploy.sh
         shell: bash
+
+      - name: Get Date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
         
       - name: Run Benchmark Tests
-        uses: navendu-pottekkat/meshery-smp-action@update-action/navendu-pottekkat
+        uses: navendu-pottekkat/meshery-smp-action@bug/change-to-test-file/navendu-pottekkat
         with:
-          provider_token: ${{ github.event.inputs.provider_token }}
+          provider_token: ${{ secrets.MESHERY_TOKEN }}
           platform: docker
           profile_name: ${{ github.event.inputs.profile_name }}
           profile_filename: ${{ github.event.inputs.profile_filename }}
           endpoint_url: ${{env.ENDPOINT_URL}}
           service_mesh: ${{env.SERVICE_MESH}}
           load_generator: ${{ matrix.load-generator }}
-          test_name: '${{ matrix.service-mesh }}-${{ matrix.load-generator }}-${{ github.event.inputs.profile_filename }}${{ github.event.inputs.profile_name }}'
+          test_name: '${{ steps.date.outputs.date }}'
 
   scheduled-test:
     name: Scheduled Benchmark Test
@@ -84,9 +85,13 @@ jobs:
           chmod +x .github/workflows/scripts/${{ matrix.service-mesh }}_deploy.sh
           .github/workflows/scripts/${{ matrix.service-mesh }}_deploy.sh
         shell: bash
+
+      - name: Get Date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
         
       - name: Run Benchmark Tests
-        uses: navendu-pottekkat/meshery-smp-action@update-action/navendu-pottekkat
+        uses: navendu-pottekkat/meshery-smp-action@bug/change-to-test-file/navendu-pottekkat
         with:
           provider_token: ${{ secrets.MESHERY_TOKEN }}
           platform: docker
@@ -94,4 +99,5 @@ jobs:
           endpoint_url: ${{env.ENDPOINT_URL}}
           service_mesh: ${{env.SERVICE_MESH}}
           load_generator: ${{ matrix.load-generator }}
-          test_name: '${{ matrix.service-mesh }}-${{ matrix.load-generator }}-{{ github.event.inputs.profile_name }}'
+          profile_name: '${{ matrix.service-mesh }}-${{ matrix.load-generator }}-${{ github.event.inputs.profile_filename }}${{ github.event.inputs.profile_name }}'
+          test_name: '${{ steps.date.outputs.date }}'
