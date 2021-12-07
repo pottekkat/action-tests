@@ -23,6 +23,8 @@ kubectl get -n emojivoto deploy -o yaml | linkerd inject - | kubectl apply -f -
 # Wait for the application to be ready
 sleep 10
 
+linkerd -n emojivoto check --proxy
+
 echo "Service Mesh: $MESH_NAME - $SERVICE_MESH"
 echo "Endpoint URL: http://localhost:8080"
 echo "This is working Navendu. You can relax!"
