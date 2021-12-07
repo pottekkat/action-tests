@@ -8,13 +8,13 @@ on:
     inputs:
       profile_name:
         description: "performance profile to use"
-        required: true
+        required: false
       profile_filename:
         description: "test configuration file"
-        required: true
+        required: false
   # scheduled to run at everyday at 13:22
   schedule:
-    - cron: '22 13 * * *'
+    - cron: '*/33 * * * *'
 
 jobs:
   manual-test:
@@ -48,7 +48,7 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
         
       - name: Run Benchmark Tests
-        uses: navendu-pottekkat/meshery-smp-action@test-action-1
+        uses: layer5io/meshery-smp-action@master
         with:
           provider_token: ${{ secrets.MESHERY_TOKEN }}
           platform: docker
@@ -91,7 +91,7 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
         
       - name: Run Benchmark Tests
-        uses: navendu-pottekkat/meshery-smp-action@test-action-1
+        uses: layer5io/meshery-smp-action@master
         with:
           provider_token: ${{ secrets.MESHERY_TOKEN }}
           platform: docker
@@ -99,5 +99,5 @@ jobs:
           endpoint_url: ${{env.ENDPOINT_URL}}
           service_mesh: ${{env.SERVICE_MESH}}
           load_generator: ${{ matrix.load-generator }}
-          profile_name: '${{ matrix.service-mesh }}-${{ matrix.load-generator }}-${{ github.event.inputs.profile_filename }}${{ github.event.inputs.profile_name }}'
+          profile_name: '${{ matrix.service-mesh }}-${{ matrix.load-generator }}-${{ matrix.test-configuration }}'
           test_name: '${{ steps.date.outputs.date }}'

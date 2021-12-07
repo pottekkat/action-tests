@@ -6,7 +6,7 @@
 
 # See: https://github.com/service-mesh-performance/service-mesh-performance/blob/master/protos/service_mesh.proto
 export MESH_NAME='Istio'
-export SERVICE_MESH=3
+export SERVICE_MESH='ISTIO'
 
 curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.11.4 sh -
 cd istio-1.11.4
@@ -27,10 +27,10 @@ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressga
 export INGRESS_HOST=$(minikube ip)
 export GATEWAY_URL=http://$INGRESS_HOST:$INGRESS_PORT
 
-minikube tunnel &
+minikube tunnel &> /dev/null &
 
 echo "Service Mesh: $MESH_NAME - $SERVICE_MESH"
 echo "Gateway URL: $GATEWAY_URL"
 
-echo "ENDPOINT_URL=$GATEWAY_URL" >> $GITHUB_ENV
+echo "ENDPOINT_URL=$GATEWAY_URL/productpage" >> $GITHUB_ENV
 echo "SERVICE_MESH=$SERVICE_MESH" >> $GITHUB_ENV
