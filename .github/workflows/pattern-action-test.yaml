@@ -1,4 +1,4 @@
-name: Mesheryctl Pattern Action
+name: Meshery Patterns Action
 on:
   workflow_dispatch:
     inputs:
@@ -26,7 +26,7 @@ jobs:
           minikube version: 'v1.23.2'
           kubernetes version: 'v1.22.2'
           driver: docker
-          
+
       - name: Apply Pattern
         uses: navendu-pottekkat/mesheryctl-service-mesh-patterns-action@update-action/navendu-pottekkat
         with:
