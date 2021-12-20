@@ -58,6 +58,13 @@ jobs:
           profile_filename: ${{ github.event.inputs.profile_filename }}
           test_name: '${{ steps.date.outputs.date }}'
 
+      - name: Deploy Service Mesh
+        run: |
+          cat ~/auth.json
+          echo | mesheryctl mesh deploy --adapter meshery-istio --namespace istio-system -t ~/auth.json ISTIO
+          sleep 50
+        shell: '/bin/bash {0}'
+
       - name: Apply Pattern
         uses: layer5io/meshery-service-mesh-patterns-action@master
         with:
@@ -65,13 +72,6 @@ jobs:
           platform: ${{ matrix.platform }}
           pattern_url: ${{ github.event.inputs.pattern_url }}
           pattern_file: ${{ github.event.inputs.pattern_file }}
-
-      - name: Deploy Service Mesh
-        run: |
-          cat ~/auth.json
-          echo | mesheryctl mesh deploy --adapter meshery-istio --namespace istio-system -t ~/auth.json ISTIO
-          sleep 50
-        shell: '/bin/bash {0}'
   
   scheduled-test:
     name: Scheduled e2e Test
