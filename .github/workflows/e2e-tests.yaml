@@ -1,4 +1,4 @@
-name: mesheryctl End-to-End Tests
+name: Meshery End-to-End Tests with mesheryctl
 on:
   workflow_dispatch:
     inputs:
