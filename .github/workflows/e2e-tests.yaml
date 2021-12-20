@@ -13,14 +13,15 @@ on:
     - cron: '43 */12 * * *'
 
 jobs:
-  manual-test-out-of-cluster:
-    name: Manual e2e Test (Out of Cluster)
+  manual-test:
+    name: Manual e2e Test
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' }}
     strategy:
       fail-fast: false
       matrix:
         k8s_version: ['v1.20.11', 'v1.21.5', 'v1.22.2']
+        platform: ['docker', 'kubernetes']
     steps:
       - name: Setup Kubernetes
         uses: manusa/actions-setup-minikube@v2.4.1
@@ -40,7 +41,7 @@ jobs:
         uses: layer5io/meshery-smp-action@master
         with:
           provider_token: ${{ secrets.PROVIDER_TOKEN }}
-          platform: docker
+          platform: ${{ matrix.platform }}
           profile_name: ${{ github.event.inputs.profile_name }}
           profile_filename: ${{ github.event.inputs.profile_filename }}
           test_name: '${{ steps.date.outputs.date }}'
