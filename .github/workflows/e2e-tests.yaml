@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Apply Pattern
-        uses: layer5io/mesheryctl-service-mesh-patterns-action@master
+        uses: layer5io/meshery-service-mesh-patterns-action@master
         with:
           provider_token: ${{ secrets.PROVIDER_TOKEN }}
           platform: ${{ matrix.platform }}
