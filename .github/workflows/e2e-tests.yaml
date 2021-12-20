@@ -60,6 +60,7 @@ jobs:
       
       - name: Deploy Service Mesh
         run: |
+          cat ~/auth.json
           echo | mesheryctl mesh deploy --adapter meshery-istio --namespace istio-system -t ~/auth.json ISTIO
           sleep 50
         shell: '/bin/bash {0}'
@@ -113,7 +114,6 @@ jobs:
       
       - name: Deploy Service Mesh
         run: |
-          cat ~/auth.json
           echo | mesheryctl mesh deploy --adapter meshery-istio --namespace istio-system -t ~/auth.json ISTIO
           sleep 50
         shell: '/bin/bash {0}'
