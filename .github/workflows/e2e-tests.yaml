@@ -49,6 +49,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Apply Pattern
+        uses: layer5io/mesheryctl-service-mesh-patterns-action@master
+        with:
+          provider_token: ${{ secrets.PROVIDER_TOKEN }}
+          platform: ${{ matrix.platform }}
+          pattern_url: ${{ github.event.inputs.pattern_url }}
+          pattern_file: ${{ github.event.inputs.pattern_file }}
+
       - name: Run Performance Tests
         uses: layer5io/meshery-smp-action@master
         with:
@@ -64,14 +72,6 @@ jobs:
           echo | mesheryctl mesh deploy --adapter meshery-istio --namespace istio-system -t ~/auth.json ISTIO
           sleep 50
         shell: '/bin/bash {0}'
-
-      - name: Apply Pattern
-        uses: layer5io/mesheryctl-service-mesh-patterns-action@master
-        with:
-          provider_token: ${{ secrets.PROVIDER_TOKEN }}
-          platform: ${{ matrix.platform }}
-          pattern_url: ${{ github.event.inputs.pattern_url }}
-          pattern_file: ${{ github.event.inputs.pattern_file }}
   
   scheduled-test:
     name: Scheduled e2e Test
