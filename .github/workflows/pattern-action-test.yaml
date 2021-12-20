@@ -28,7 +28,7 @@ jobs:
           driver: docker
 
       - name: Apply Pattern
-        uses: navendu-pottekkat/mesheryctl-service-mesh-patterns-action@update-action/navendu-pottekkat
+        uses: layer5io/meshery-service-mesh-patterns-action@master
         with:
           provider_token: ${{ github.event.inputs.provider_token }}
           platform: docker
