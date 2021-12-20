@@ -33,6 +33,9 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
 
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
       - name: Run Performance Tests
         uses: layer5io/meshery-smp-action@master
         with:
