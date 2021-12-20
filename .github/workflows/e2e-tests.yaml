@@ -60,7 +60,7 @@ jobs:
       
       - name: Deploy Service Mesh
         run: |
-          mesheryctl mesh deploy --adapter meshery-istio --namespace istio-system -t ~/auth.json ISTIO
+          echo | mesheryctl mesh deploy --adapter meshery-istio --namespace istio-system -t ~/auth.json ISTIO
           sleep 50
         shell: bash
 
@@ -117,9 +117,23 @@ jobs:
           sleep 50
         shell: bash
 
-      - name: Apply Pattern
+      - name: Apply BookInfo Pattern
         uses: layer5io/mesheryctl-service-mesh-patterns-action@master
         with:
           provider_token: ${{ secrets.PROVIDER_TOKEN }}
           platform: ${{ matrix.platform }}
           pattern_url: https://raw.githubusercontent.com/service-mesh-patterns/service-mesh-patterns/master/samples/bookInfoPattern.yaml
+
+      - name: Apply Circuit Breaker Pattern
+        uses: layer5io/mesheryctl-service-mesh-patterns-action@master
+        with:
+          provider_token: ${{ secrets.PROVIDER_TOKEN }}
+          platform: ${{ matrix.platform }}
+          pattern_url: https://raw.githubusercontent.com/service-mesh-patterns/service-mesh-patterns/master/samples/servicemeshcon-na-2021/circuitbreaker.yaml
+
+      - name: Apply Retries Pattern
+        uses: layer5io/mesheryctl-service-mesh-patterns-action@master
+        with:
+          provider_token: ${{ secrets.PROVIDER_TOKEN }}
+          platform: ${{ matrix.platform }}
+          pattern_url: https://raw.githubusercontent.com/service-mesh-patterns/service-mesh-patterns/master/samples/servicemeshcon-na-2021/retries.yaml
