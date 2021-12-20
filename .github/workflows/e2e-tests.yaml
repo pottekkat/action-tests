@@ -51,3 +51,42 @@ jobs:
           profile_name: ${{ github.event.inputs.profile_name }}
           profile_filename: ${{ github.event.inputs.profile_filename }}
           test_name: '${{ steps.date.outputs.date }}'
+  
+  scheduled-test:
+    name: Scheduled e2e Test
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'schedule' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s_version: ['v1.20.11', 'v1.21.5', 'v1.22.2']
+        platform: ['docker', 'kubernetes']
+    steps:
+      - name: Setup Kubernetes
+        uses: manusa/actions-setup-minikube@v2.4.1
+        with:
+          minikube version: 'v1.23.2'
+          kubernetes version: ${{ matrix.k8s_version }}
+          driver: docker
+
+      - name: Run minikube tunnel
+        run: |
+          echo 'Running minikube tunnel'
+          minikube tunnel &> /dev/null &
+        shell: bash
+
+      - name: Get Date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
+
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Run Performance Tests
+        uses: layer5io/meshery-smp-action@master
+        with:
+          provider_token: ${{ secrets.PROVIDER_TOKEN }}
+          platform: ${{ matrix.platform }}
+          profile_name: sample-e2e-workflow
+          profile_filename: sample-test-config.yaml
+          test_name: '${{ steps.date.outputs.date }}'
