@@ -59,12 +59,12 @@ body:
       label: Environment
       description: Share your environment details. Reports without proper environment details will likely be closed.
       value: |
-        APISIX version (run `apisix version`):
-        Operating system (run `uname -a`):
-        OpenResty / Nginx version (run `openresty -V` or `nginx -V`):
-        etcd version, if relevant (run `curl http://127.0.0.1:9090/v1/server_info`):
-        APISIX Dashboard version, if relevant:
-        Plugin runner version, for issues related to plugin runners:
-        LuaRocks version, for installation issues (run `luarocks --version`):
+        - APISIX version (run `apisix version`):
+        - Operating system (run `uname -a`):
+        - OpenResty / Nginx version (run `openresty -V` or `nginx -V`):
+        - etcd version, if relevant (run `curl http://127.0.0.1:9090/v1/server_info`):
+        - APISIX Dashboard version, if relevant:
+        - Plugin runner version, for issues related to plugin runners:
+        - LuaRocks version, for installation issues (run `luarocks --version`):
     validations:
       required: true
