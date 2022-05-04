@@ -1,5 +1,5 @@
 name: "Feature Request"
-description: Suggest an enhancement to APISIX.
+description: Suggest an enhancement to Apache APISIX.
 title: "feat: As a user, I want to ..., so that ..."
 body:
   - type: markdown
